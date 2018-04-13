@@ -26,7 +26,7 @@ class Fancy extends React.Component {
     this.changeInput = (e) => {
       this.setState({ input: e.target.value }, () => {
         this.toggleList();
-        this.props.callback(e, this.state.input);
+        this.props.callback(this.state.input);
       });
     };
     this.highlight = (text) => {
@@ -93,9 +93,6 @@ class Fancy extends React.Component {
         this.placeholder = props.placeholder;
       }
     }
-  }
-  componentDidUpdate() {
-    console.log('hereee did update');
   }
   render() {
     return (

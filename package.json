@@ -1,5 +1,5 @@
 {
-  "name": "component",
+  "name": "dropdown",
   "version": "1.0.0",
   "description": "First component",
   "main": "build/index.js",
