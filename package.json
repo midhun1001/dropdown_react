@@ -1,7 +1,7 @@
 {
-  "name": "custom-dropdown-react",
+  "name": "customizable-dropdown-react",
   "version": "1.0.1",
-  "description": "First component",
+  "description": "Light weight, fully customizable react component for dropdown",
   "main": "build/index.js",
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0",
@@ -22,6 +22,10 @@
     "email": "midhun.murali.mm@gmail.com"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/midhun1001/dropdown_react"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
