@@ -12,6 +12,12 @@ class Dropdown extends React.Component {
       multi: [],
       arrDir: '',
     };
+    this.handleClickOutside = (e) => {
+      if (!document.getElementById('customizable-dropdown').contains(e.target)) {
+        this.setState({ showList: false });
+      }
+    };
+    this.handleClickOutside = this.handleClickOutside.bind(this);
     this.FocusEvent = (e, flag) => {
       e.persist();
       this.setState({ showList: flag }, () => {
@@ -96,18 +102,19 @@ class Dropdown extends React.Component {
           multi.push(ele.getAttribute('data-value'));
           this.setState({ multi, input: '' }, () => {
             document.getElementById('dp__input').style.width = `${this.defaultWidth().multiSelectWidth}px`;
-            console.log(document.querySelector('#dp__list ul li[data-selected="active"] a span').style.display = 'inline');
+            document.querySelector('#dp__list ul li[data-selected="active"] a span').style.display = 'inline'
             if (this.props.callback) {
               this.customCallback();
             }
           });
         }
       } else {
-        const data = e.target.parentNode.getAttribute('data-value') || document.querySelector('#dp__list ul li[data-selected="active"]').getAttribute('data-value');
+        e.target.parentNode.setAttribute('data-selected', 'active');
+        const data = document.querySelector('#dp__list ul li[data-selected="active"]').getAttribute('data-value');
         this.setState({ input: data }, () => {
+          document.getElementById('dp__input').focus();
           if (this.props.callback) {
             this.customCallback();
-            document.getElementById('dp__input').focus();
           }
         });
       }
@@ -120,7 +127,6 @@ class Dropdown extends React.Component {
         this.setState({ multi }, () => {
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).style.backgroundColor = '';
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
-          document.querySelector(`#dp__list ul li[data-value="${val}"] a span`).style.display = 'none';
           document.getElementById('dp__input').focus();
         });
       }
@@ -155,7 +161,6 @@ class Dropdown extends React.Component {
               );
             }
           } else {
-            console.log(this.state.input);
             if (val.substr(0, this.state.input.length).toLowerCase() === this.state.input.toLowerCase()) {
               html_li.push(
                 <li
@@ -246,6 +251,7 @@ class Dropdown extends React.Component {
   }
   componentDidMount() {
     document.getElementById('dp__input').style.width = `${this.defaultWidth().defaultWidth}px`;
+    document.addEventListener('mousedown', this.handleClickOutside);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
@@ -255,6 +261,7 @@ class Dropdown extends React.Component {
   render() {
     return (
       <div
+            id="customizable-dropdown"
             className={`dp ${this.props.containerClass ? this.props.containerClass: ''}` }
           >
             {
@@ -271,7 +278,6 @@ class Dropdown extends React.Component {
               onChange={(e) => this.changeInput(e)}
               onKeyDown={(e) => this.select(e)}
               onFocus={(e) => this.FocusEvent(e, true)}
-              onBlur={() => this.setState({ showList: false })}
             />
             <button className="dp__clear" onClick={(e) => this.changeInput(e, 'clear')}>
               <span className={`${this.state.arrDir} arrow`} >&#8227;&nbsp;</span>
