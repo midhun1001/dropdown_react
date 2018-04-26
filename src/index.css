@@ -4,22 +4,76 @@
 .dp {
   display: inline-block;
   float: left;
-  height: 100%;
+  height: inherit;
   width: 100%;
-  overflow: none;
-  background: transparent;
+  background: white;
   position: relative;
 }
 .dp input {
   height: 100%;
   float: left;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   padding: 3px 10px;
   margin: 0;
   border-width: 0;
   border: 0;
   outline: none;
   background: #ffffff;
+  font-size: 12px;
+}
+.dp__selectedInput {
+  float: left;
+  display: inline-block;
+  background: #fff;
+  height: 100%;
+  max-width: 50%;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.multiselect__item {
+  height: 100%;
+  display: inline-block;
+  padding: 3px 5px;
+}
+.multiselect__item span {
+  height: 100%;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  background: #2196F3;
+  box-shadow: 0 0 3px #2196F3;
+  color: #fff;
+  padding-right: 5px;
+}
+.multiselect__item span button {
+  display: inline-block;
+  margin-right: 5px;
+  background: transparent;
+  height: 100%;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+}
+.dp__clear {
+  position: absolute;
+  height: 100%;
+  right: 0px;
+  background: transparent;
+  border: 0;
+  color: #cccccc;
+  cursor: pointer;
+  outline: none;
+}
+.dp__clear span {
+  padding: 0px 5px;
+  font-size: 12px;
+  display: inline-block;
+}
+.arrow_down {
+  transform: rotate(90deg);
 }
 .dp__list {
   position: absolute;
@@ -27,7 +81,9 @@
   width: 100%;
   background: #fff;
   border: 1px solid #e7e7e7;
-  top: 100%
+  top: 100%;
+  max-height: 200px;
+  overflow-x: auto;
 }
 .dp__list ul {
   padding: 0;
@@ -49,4 +105,11 @@
 .dp__list ul li a {
   text-decoration: none;
   color: #2196F3;
+}
+.list__selected {
+  float: right;
+  color: #ccc;
+  font-size: 12px;
+  font-style: italic;
+  display: none;
 }

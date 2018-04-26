@@ -1,14 +1,16 @@
 {
-  "name": "dropdown",
-  "version": "1.0.0",
+  "name": "custom-dropdown-react",
+  "version": "1.0.1",
   "description": "First component",
   "main": "build/index.js",
   "peerDependencies": {
-    "react": "^16.3.1"
+    "react": "^15.3.0 || ^16.0",
+    "react-dom": "^15.3.0 || ^16.0"
   },
   "dependencies": {
-    "react": "15.6.2",
-    "webpack": "3.11.0"
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "webpack": "^3.11.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +21,7 @@
     "name": "Midhun Murali",
     "email": "midhun.murali.mm@gmail.com"
   },
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
