@@ -12,6 +12,7 @@ class Dropdown extends React.Component {
       multi: [],
       arrDir: '',
     };
+    this.dropdownInput = React.createRef();
     this.handleClickOutside = (e) => {
       if (!document.getElementById('customizable-dropdown').contains(e.target)) {
         this.setState({ showList: false });
@@ -48,7 +49,7 @@ class Dropdown extends React.Component {
       const callBack = {};
       if (flag === 'clear') {
         this.setState({ input: '', multi: [] });
-        document.getElementById('dp__input').focus();
+        this.dropdownInput.current.focus();
       } else {
         this.setState({ input: e.target.value }, () => {
           if (this.props.callback) {
@@ -94,14 +95,14 @@ class Dropdown extends React.Component {
           e.target.parentNode.style.backgroundColor = "#f5f5f5";
           const data = e.target.parentNode.getAttribute('data-value');
           this.setState({ currentFocus: this.state.list.indexOf(data) });
-          document.getElementById('dp__input').focus();
+          this.dropdownInput.current.focus();
         }
         const ele = document.querySelector('#dp__list ul li[data-selected="active"]');
         const multi = this.state.multi;
         if (!multi.includes(ele.getAttribute('data-value'))) {
           multi.push(ele.getAttribute('data-value'));
           this.setState({ multi, input: '' }, () => {
-            document.getElementById('dp__input').style.width = `${this.defaultWidth().multiSelectWidth}px`;
+            this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
             document.querySelector('#dp__list ul li[data-selected="active"] a span').style.display = 'inline'
             if (this.props.callback) {
               this.customCallback();
@@ -112,7 +113,7 @@ class Dropdown extends React.Component {
         e.target.parentNode.setAttribute('data-selected', 'active');
         const data = document.querySelector('#dp__list ul li[data-selected="active"]').getAttribute('data-value');
         this.setState({ input: data }, () => {
-          document.getElementById('dp__input').focus();
+          this.dropdownInput.current.focus();
           if (this.props.callback) {
             this.customCallback();
           }
@@ -128,7 +129,7 @@ class Dropdown extends React.Component {
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).style.backgroundColor = '';
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
           document.querySelector(`#dp__list ul li[data-value="${val}"] a span`).style.display = 'none'
-          document.getElementById('dp__input').focus();
+          this.dropdownInput.current.focus();
         });
       }
     };
@@ -203,7 +204,6 @@ class Dropdown extends React.Component {
     this.select = (e) => {
       const li = document.querySelector('#dp__list ul').childNodes;
       if (e.which === 40) {
-        console.log(li.length);
         if (li.length - 1 > this.state.currentFocus) {
           this.setState({ currentFocus: this.state.currentFocus + 1 }, () => {
             const prev = li[this.state.currentFocus - 1];
@@ -256,7 +256,7 @@ class Dropdown extends React.Component {
     }
   }
   componentDidMount() {
-    document.getElementById('dp__input').style.width = `${this.defaultWidth().defaultWidth}px`;
+    this.dropdownInput.current.style.width = `${this.defaultWidth().defaultWidth}px`;
     document.addEventListener('mousedown', this.handleClickOutside);
   }
   componentWillReceiveProps(nextProps) {
@@ -277,7 +277,7 @@ class Dropdown extends React.Component {
               </div>
             }
             <input
-              id="dp__input"
+              ref={this.dropdownInput}
               className={`dp__input ${this.props.inputClass ? this.props.inputClass : ''}`}
               value={this.state.input}
               placeholder={this.placeholder}
