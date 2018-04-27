@@ -33,5 +33,14 @@
     "babel-preset-env": "^1.5.1",
     "css-loader": "^0.28.11",
     "style-loader": "^0.20.3"
-  }
+  },
+  "keywords": [
+    "dropdown",
+    "input",
+    "multiselect",
+    "react",
+    "react-component",
+    "select",
+    "ui"
+  ],
 }
