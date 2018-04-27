@@ -2,8 +2,8 @@
 
 <h4>Totally customizable and light weight dropdown for react component.</h4>
 
-npm install customizable-dropdown-react
-yarn add customizable-dropdown-react
+<p>npm install customizable-dropdown-react</p>
+<p>yarn add customizable-dropdown-react</p>
 
 ```html
 import Dropdown "customizable-dropdown-react";
