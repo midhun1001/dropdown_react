@@ -9,7 +9,7 @@
   background: white;
   position: relative;
 }
-.dp input {
+.dp__input {
   height: 100%;
   float: left;
   display: inline-block;

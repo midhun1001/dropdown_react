@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './index.css';
 
 class Dropdown extends React.Component {
@@ -13,6 +14,11 @@ class Dropdown extends React.Component {
       arrDir: '',
     };
     this.dropdownInput = React.createRef();
+    this.validationProps = () => {
+      return (
+        typeof this.state.list === 'object' && this.state.list.length > 0
+      );
+    };
     this.handleClickOutside = (e) => {
       if (!document.getElementById('customizable-dropdown').contains(e.target)) {
         this.setState({ showList: false });
@@ -20,28 +26,30 @@ class Dropdown extends React.Component {
     };
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.FocusEvent = (e, flag) => {
-      e.persist();
-      this.setState({ showList: flag }, () => {
-        if (this.props.multiselect) {
-          const li = document.querySelector('#dp__list ul').childNodes;
-          li[this.state.currentFocus].style.backgroundColor = '#f5f5f5';
-          li[this.state.currentFocus].setAttribute('data-selected', 'active');
+      if (this.validationProps()) {
+        e.persist();
+        this.setState({ showList: flag }, () => {
+          if (this.props.multiselect) {
+            const li = document.querySelector('#dp__list ul').childNodes;
+            li[this.state.currentFocus].style.backgroundColor = '#f5f5f5';
+            li[this.state.currentFocus].setAttribute('data-selected', 'active');
+          }
+        });
+        if (flag) {
+          this.setState({ arrDir: 'arrow_down' });
+        } else {
+          this.setState({ arrDir: '' });
         }
-      });
-      if (flag) {
-        this.setState({ arrDir: 'arrow_down' });
-      } else {
-        this.setState({ arrDir: '' });
-      }
-      if (this.props.focus) {
-        const focusData = {
-          currentInput: this.state.input,
-          event: e
-        };
-        if (this.props.multiselect) {
-          focusData.multiSelect = this.state.multi;
+        if (this.props.focus) {
+          const focusData = {
+            currentInput: this.state.input,
+            event: e
+          };
+          if (this.props.multiselect) {
+            focusData.multiSelect = this.state.multi;
+          }
+          this.props.focus(focusData);
         }
-        this.props.focus(focusData);
       }
     };
     this.changeInput = (e, flag) => {
@@ -67,7 +75,7 @@ class Dropdown extends React.Component {
       let multiWidth = 0;
       const parentWidth = document.getElementsByClassName('dp')[0].offsetWidth;
       const closeWidth = document.getElementsByClassName('dp__clear')[0].offsetWidth;
-      if (this.props.multiselect) {
+      if (this.props.multiselect === true) {
         multiWidth = document.getElementsByClassName('dp__selectedInput')[0].offsetWidth;
       }
       const defaultWidth = parentWidth - closeWidth;
@@ -77,12 +85,14 @@ class Dropdown extends React.Component {
         multiSelectWidth
       };
     };
-    this.customCallback = () => {
+    this.customCallback = (e) => {
       const callBack = {
         currentInput: this.state.input,
-        event: e,
-        multiSelect: this.state.multi
+        event: e
       };
+      if (this.props.multiselect === true) {
+        callBack.multiSelect = this.state.multi
+      }
       this.props.callback(callBack);
     };
     this.setInput = (e, input) => {
@@ -105,7 +115,7 @@ class Dropdown extends React.Component {
             this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
             document.querySelector('#dp__list ul li[data-selected="active"] a span').style.display = 'inline'
             if (this.props.callback) {
-              this.customCallback();
+              this.customCallback(e);
             }
           });
         }
@@ -115,7 +125,7 @@ class Dropdown extends React.Component {
         this.setState({ input: data }, () => {
           this.dropdownInput.current.focus();
           if (this.props.callback) {
-            this.customCallback();
+            this.customCallback(e);
           }
         });
       }
@@ -151,8 +161,8 @@ class Dropdown extends React.Component {
       return { __html: `<strong>${text.substr(0, this.state.input.length)}</strong>${text.substr(this.state.input.length)} <span class="list__selected">Selected</span>` };
     };
     this.renderList = () => {
-      if (this.state.list.length > 0) {
-        const html_li = [];
+      const html_li = [];
+      if (typeof this.state.list ==='object' && this.state.list.length > 0) {
         this.state.list.map((val, index) => {
           if (typeof val === 'object') {
             if (val.text.substr(0, this.state.input.length).toLowerCase() === this.state.input.toLowerCase()) {
@@ -175,13 +185,13 @@ class Dropdown extends React.Component {
             }
           }
         });
-        if (html_li.length === 0) {
-          html_li.push(
-            <li key="no-data">No data</li>
-          );
-        }
-        return html_li;
       }
+      if (html_li.length === 0 || this.state.list.length === 0 ) {
+        html_li.push(
+          <li key="no-data">No data</li>
+        );
+      }
+      return html_li;
     };
     this.scrollList = (dir, ele) => {
       if (dir === 'down') {
@@ -202,50 +212,52 @@ class Dropdown extends React.Component {
       }
     };
     this.select = (e) => {
-      const li = document.querySelector('#dp__list ul').childNodes;
-      if (e.which === 40) {
-        if (li.length - 1 > this.state.currentFocus) {
-          this.setState({ currentFocus: this.state.currentFocus + 1 }, () => {
+      if (this.validationProps()) {
+        const li = document.querySelector('#dp__list ul').childNodes;
+        if (e.which === 40) {
+          if (li.length - 1 > this.state.currentFocus) {
+            this.setState({ currentFocus: this.state.currentFocus + 1 }, () => {
+              const prev = li[this.state.currentFocus - 1];
+              const next = li[this.state.currentFocus];
+              if (prev) {
+                prev.style.backgroundColor = '';
+                prev.removeAttribute('data-selected');
+              }
+              if (next) {
+                next.style.backgroundColor = '#f5f5f5';
+                next.setAttribute('data-selected', 'active');
+                this.scrollList('down', next);
+              }
+            });
+          }
+        } else if (e.which === 38) {
+          if (this.state.currentFocus !== 0) {
             const prev = li[this.state.currentFocus - 1];
             const next = li[this.state.currentFocus];
-            if (prev) {
-              prev.style.backgroundColor = '';
-              prev.removeAttribute('data-selected');
-            }
-            if (next) {
-              next.style.backgroundColor = '#f5f5f5';
-              next.setAttribute('data-selected', 'active');
-              this.scrollList('down', next);
-            }
-          });
+            prev.style.backgroundColor = '#f5f5f5';
+            prev.setAttribute('data-selected', 'active');
+            next.style.backgroundColor = '';
+            next.removeAttribute('data-selected');
+            this.scrollList('up', prev);
+            this.setState({ currentFocus: this.state.currentFocus - 1 });
+          }
+        } else if (e.which === 13) {
+          if (typeof this.props.list === 'object') {
+            document.querySelector('#dp__list ul li[data-selected="active"] a').click();
+          } else {
+            this.setInput(e);
+          }
         }
-      } else if (e.which === 38) {
-        if (this.state.currentFocus !== 0) {
-          const prev = li[this.state.currentFocus - 1];
-          const next = li[this.state.currentFocus];
-          prev.style.backgroundColor = '#f5f5f5';
-          prev.setAttribute('data-selected', 'active');
-          next.style.backgroundColor = '';
-          next.removeAttribute('data-selected');
-          this.scrollList('up', prev);
-          this.setState({ currentFocus: this.state.currentFocus - 1 });
+        if (this.props.keydown) {
+          const focusData = {
+            currentInput: this.state.input,
+            event: e
+          };
+          if (this.props.multiselect) {
+            focusData.multiSelect = this.state.multi;
+          }
+          this.props.keydown(focusData);
         }
-      } else if (e.which === 13) {
-        if (typeof this.props.list === 'object') {
-          document.querySelector('#dp__list ul li[data-selected="active"] a').click();
-        } else {
-          this.setInput(e);
-        }
-      }
-      if (this.props.keydown) {
-        const focusData = {
-          currentInput: this.state.input,
-          event: e
-        };
-        if (this.props.multiselect) {
-          focusData.multiSelect = this.state.multi;
-        }
-        this.props.keydown(focusData);
       }
     };
     this.placeholder = 'Enter your text';
@@ -305,4 +317,10 @@ class Dropdown extends React.Component {
     );
   }
 }
+Dropdown.propTypes = {
+  list: PropTypes.array.isRequired,
+  multiselect: PropTypes.bool,
+  placeholder: PropTypes.string,
+  callback: PropTypes.func
+};
 export default Dropdown;
