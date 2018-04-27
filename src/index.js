@@ -67,7 +67,7 @@ class Dropdown extends React.Component {
       const parentWidth = document.getElementsByClassName('dp')[0].offsetWidth;
       const closeWidth = document.getElementsByClassName('dp__clear')[0].offsetWidth;
       if (this.props.multiselect) {
-        document.getElementsByClassName('dp__selectedInput')[0].offsetWidth;
+        multiWidth = document.getElementsByClassName('dp__selectedInput')[0].offsetWidth;
       }
       const defaultWidth = parentWidth - closeWidth;
       const multiSelectWidth = defaultWidth - multiWidth;
@@ -127,6 +127,7 @@ class Dropdown extends React.Component {
         this.setState({ multi }, () => {
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).style.backgroundColor = '';
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
+          document.querySelector(`#dp__list ul li[data-value="${val}"] a span`).style.display = 'none'
           document.getElementById('dp__input').focus();
         });
       }
@@ -229,7 +230,11 @@ class Dropdown extends React.Component {
           this.setState({ currentFocus: this.state.currentFocus - 1 });
         }
       } else if (e.which === 13) {
-        this.setInput(e);
+        if (typeof this.props.list === 'object') {
+          document.querySelector('#dp__list ul li[data-selected="active"] a').click();
+        } else {
+          this.setInput(e);
+        }
       }
       if (this.props.keydown) {
         const focusData = {
