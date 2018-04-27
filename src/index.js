@@ -203,6 +203,7 @@ class Dropdown extends React.Component {
     this.select = (e) => {
       const li = document.querySelector('#dp__list ul').childNodes;
       if (e.which === 40) {
+        console.log(li.length);
         if (li.length - 1 > this.state.currentFocus) {
           this.setState({ currentFocus: this.state.currentFocus + 1 }, () => {
             const prev = li[this.state.currentFocus - 1];
