@@ -41,13 +41,7 @@ class Dropdown extends React.Component {
     this.FocusEvent = (e, flag) => {
       if (this.validationProps()) {
         e.persist();
-        this.setState({ showList: flag }, () => {
-          if (this.props.multiselect === true) {
-            const li = document.querySelector('#dp__list ul').childNodes;
-            li[this.state.currentFocus].style.backgroundColor = '#f5f5f5';
-            li[this.state.currentFocus].setAttribute('data-selected', 'active');
-          }
-        });
+        this.setState({ showList: flag });
         if (flag) {
           this.setState({ arrDir: 'arrow_down' });
         } else {
@@ -69,10 +63,10 @@ class Dropdown extends React.Component {
       e.persist();
       const callBack = {};
       if (flag === 'clear') {
-        this.setState({ input: '', multi: [] });
+        this.setState({ input: '', multi: [], currentFocus: 0 });
         this.dropdownInput.current.focus();
       } else {
-        this.setState({ input: e.target.value }, () => {
+        this.setState({ input: e.target.value, currentFocus: 0 }, () => {
           if (this.props.callback) {
             callBack.currentInput = this.state.input;
             callBack.event = e;
@@ -110,37 +104,13 @@ class Dropdown extends React.Component {
     };
     this.setInput = (e, input) => {
       e.persist();
-      if (this.props.multiselect === true) {
-        if (e.type === 'click') {
-          if (document.querySelector('#dp__list ul li[data-selected="active"]')) {
-            document.querySelector('#dp__list ul li[data-selected="active"]').style.backgroundColor = '';
-            document.querySelector('#dp__list ul li[data-selected="active"]').removeAttribute('data-selected');
-          }
-          e.target.parentNode.setAttribute('data-selected', 'active');
-          e.target.parentNode.style.backgroundColor = "#f5f5f5";
-          const data = e.target.parentNode.getAttribute('data-value');
-          this.setState({ currentFocus: this.state.list.indexOf(data) });
+      const list = this.state.list;
+      const multi = this.state.multi;
+      if (!multi.includes(input)) {
+        multi.push(input);
+        this.setState({ currentFocus: list.indexOf(input), multi },() => {
           this.dropdownInput.current.focus();
-        }
-        const ele = document.querySelector('#dp__list ul li[data-selected="active"]');
-        const multi = this.state.multi;
-        if (ele && !multi.includes(ele.getAttribute('data-value'))) {
-          multi.push(ele.getAttribute('data-value'));
-          this.setState({ multi, input: '' }, () => {
-            this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
-            if (this.props.callback) {
-              this.customCallback(e);
-            }
-          });
-        }
-      } else {
-        e.target.parentNode.setAttribute('data-selected', 'active');
-        const data = document.querySelector('#dp__list ul li[data-selected="active"]').getAttribute('data-value');
-        this.setState({ input: data }, () => {
-          this.dropdownInput.current.focus();
-          if (this.props.callback) {
-            this.customCallback(e);
-          }
+          this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
         });
       }
     };
@@ -150,7 +120,6 @@ class Dropdown extends React.Component {
         const index = multi.indexOf(val);
         multi.splice(index, 1);
         this.setState({ multi }, () => {
-          document.querySelector(`#dp__list ul li[data-value="${val}"]`).style.backgroundColor = '';
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
           this.dropdownInput.current.focus();
         });
@@ -179,7 +148,21 @@ class Dropdown extends React.Component {
       return '';
     }
     this.highlight = (text) => {
-      return { __html: `<strong>${text.substr(0, this.state.input.length)}</strong>${text.substr(this.state.input.length)} <span class="list__selected">${this.selected(text)}</span>` };
+      return (
+        { __html: `<strong>${text.substr(0, this.state.input.length)}</strong>${text.substr(this.state.input.length)} <span class="list__selected">${this.selected(text)}</span>` }
+      )
+    };
+    this.focusItem = (index) => {
+      let classname = '';
+      let status = '';
+      if (index === this.state.currentFocus) {
+        classname = 'highlight';
+        status = 'active';
+      }
+      return {
+        classname,
+        status
+      };
     };
     this.renderList = () => {
       const html_li = [];
@@ -197,8 +180,10 @@ class Dropdown extends React.Component {
             if (val.substr(0, this.state.input.length).toLowerCase() === this.state.input.toLowerCase()) {
               html_li.push(
                 <li
+                  className={`${this.focusItem(index).classname}`}
                   data-value={val}
                   key={index}
+                  data-selected={this.focusItem(index).status}
                 >
                   <a dangerouslySetInnerHTML={this.highlight(val)} onClick={(e) => this.setInput(e, val)} />
                 </li>
@@ -214,7 +199,9 @@ class Dropdown extends React.Component {
       }
       return html_li;
     };
-    this.scrollList = (dir, ele) => {
+    this.scrollList = (dir) => {
+      const li = document.querySelector('#dp__list ul').childNodes;
+      const ele = li[this.state.currentFocus];
       if (dir === 'down') {
         const divHeight = document.getElementById('dp__list').offsetHeight;
         const scrollPos = document.getElementById('dp__list').scrollTop;
@@ -233,43 +220,21 @@ class Dropdown extends React.Component {
       }
     };
     this.select = (e) => {
-      if (this.validationProps()) {
+      if (this.validationProps() && document.querySelector('#dp__list ul')) {
         const li = document.querySelector('#dp__list ul').childNodes;
         if (e.which === 40) {
           if (li.length - 1 > this.state.currentFocus) {
-            this.setState({ currentFocus: this.state.currentFocus + 1 }, () => {
-              const prev = li[this.state.currentFocus - 1];
-              const next = li[this.state.currentFocus];
-              if (prev) {
-                prev.style.backgroundColor = '';
-                prev.removeAttribute('data-selected');
-              }
-              if (next) {
-                next.style.backgroundColor = '#f5f5f5';
-                next.setAttribute('data-selected', 'active');
-                this.scrollList('down', next);
-              }
-            });
+            this.setState({ currentFocus: this.state.currentFocus + 1 }, () => this.scrollList('down'));
           }
         } else if (e.which === 38) {
           if (this.state.currentFocus !== 0) {
-            const prev = li[this.state.currentFocus - 1];
-            const next = li[this.state.currentFocus];
-            prev.style.backgroundColor = '#f5f5f5';
-            prev.setAttribute('data-selected', 'active');
-            next.style.backgroundColor = '';
-            next.removeAttribute('data-selected');
-            this.scrollList('up', prev);
-            this.setState({ currentFocus: this.state.currentFocus - 1 });
+            this.setState({ currentFocus: this.state.currentFocus - 1 }, () => this.scrollList('up'));
           }
         } else if (e.which === 13) {
-          if (typeof this.props.list === 'object' && document.querySelector('#dp__list ul li[data-selected="active"] a')) {
-            document.querySelector('#dp__list ul li[data-selected="active"] a').click();
-          } else {
-            this.setInput(e);
+          if (typeof this.props.list === 'object') {
+            li[this.state.currentFocus].getElementsByTagName('a')[0].click()
           }
         } else if (e.which === 8) {
-
           if (this.state.input === '' && this.props.multiselect === true && this.state.multi.length > 0) {
             this.removeFromMulti(this.state.multi[this.state.multi.length -1]);
           }
