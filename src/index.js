@@ -124,7 +124,7 @@ class Dropdown extends React.Component {
         }
         const ele = document.querySelector('#dp__list ul li[data-selected="active"]');
         const multi = this.state.multi;
-        if (!multi.includes(ele.getAttribute('data-value'))) {
+        if (ele && !multi.includes(ele.getAttribute('data-value'))) {
           multi.push(ele.getAttribute('data-value'));
           this.setState({ multi, input: '' }, () => {
             this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
@@ -263,12 +263,13 @@ class Dropdown extends React.Component {
             this.setState({ currentFocus: this.state.currentFocus - 1 });
           }
         } else if (e.which === 13) {
-          if (typeof this.props.list === 'object') {
+          if (typeof this.props.list === 'object' && document.querySelector('#dp__list ul li[data-selected="active"] a')) {
             document.querySelector('#dp__list ul li[data-selected="active"] a').click();
           } else {
             this.setInput(e);
           }
         } else if (e.which === 8) {
+
           if (this.state.input === '' && this.props.multiselect === true && this.state.multi.length > 0) {
             this.removeFromMulti(this.state.multi[this.state.multi.length -1]);
           }
