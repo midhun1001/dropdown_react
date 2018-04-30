@@ -25,6 +25,19 @@ class Dropdown extends React.Component {
       }
     };
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.onFocusout = (e) => {
+      if (this.props.onblur) {
+        e.persist();
+        const data = {
+          currentInput: this.state.input,
+          event: e
+        };
+        if (this.props.multiselect === true) {
+          data.multiSelect = this.state.multi;
+        }
+        this.props.onblur(data);
+      }
+    };
     this.FocusEvent = (e, flag) => {
       if (this.validationProps()) {
         e.persist();
@@ -115,7 +128,6 @@ class Dropdown extends React.Component {
           multi.push(ele.getAttribute('data-value'));
           this.setState({ multi, input: '' }, () => {
             this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
-            document.querySelector('#dp__list ul li[data-selected="active"] a span').style.display = 'inline'
             if (this.props.callback) {
               this.customCallback(e);
             }
@@ -140,7 +152,6 @@ class Dropdown extends React.Component {
         this.setState({ multi }, () => {
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).style.backgroundColor = '';
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
-          document.querySelector(`#dp__list ul li[data-value="${val}"] a span`).style.display = 'none'
           this.dropdownInput.current.focus();
         });
       }
@@ -159,8 +170,16 @@ class Dropdown extends React.Component {
         ))
       );
     };
+    this.selected = (text) => {
+      if (this.state.multi.includes(text)) {
+        return (
+          'Selected'
+        );
+      }
+      return '';
+    }
     this.highlight = (text) => {
-      return { __html: `<strong>${text.substr(0, this.state.input.length)}</strong>${text.substr(this.state.input.length)} <span class="list__selected">Selected</span>` };
+      return { __html: `<strong>${text.substr(0, this.state.input.length)}</strong>${text.substr(this.state.input.length)} <span class="list__selected">${this.selected(text)}</span>` };
     };
     this.renderList = () => {
       const html_li = [];
@@ -302,6 +321,7 @@ class Dropdown extends React.Component {
               onChange={(e) => this.changeInput(e)}
               onKeyDown={(e) => this.select(e)}
               onFocus={(e) => this.FocusEvent(e, true)}
+              onBlur={(e) => this.onFocusout(e) }
             />
             <button className="dp__clear" onClick={(e) => this.changeInput(e, 'clear')}>
               <span className={`${this.state.arrDir} arrow`} >&#8227;&nbsp;</span>
@@ -327,6 +347,9 @@ Dropdown.propTypes = {
   list: PropTypes.array.isRequired,
   multiselect: PropTypes.bool,
   placeholder: PropTypes.string,
-  callback: PropTypes.func
+  callback: PropTypes.func,
+  onblur: PropTypes.func,
+  focus: PropTypes.func,
+  keydown: PropTypes.func,
 };
 export default Dropdown;

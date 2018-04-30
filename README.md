@@ -116,7 +116,7 @@ import Dropdown "customizable-dropdown-react";
             </tr>
           </tbody>
         </table>
-<p>The props of type function returns the json object of structure: </p> 
+<p>The response for all the functional props i.e focus, keydown, callback is: </p> 
   <pre>
     {
       currentInput: '', // current input of the component
