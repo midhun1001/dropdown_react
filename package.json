@@ -1,6 +1,6 @@
 {
   "name": "customizable-dropdown-react",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Light weight, fully customizable react component for dropdown",
   "main": "build/index.js",
   "peerDependencies": {
