@@ -16,7 +16,7 @@ class Dropdown extends React.Component {
     this.dropdownInput = React.createRef();
     this.validationProps = () => {
       return (
-        typeof this.state.list === 'object' && this.state.list.length > 0
+        typeof this.state.list === 'object'
       );
     };
     this.handleClickOutside = (e) => {
@@ -192,7 +192,11 @@ class Dropdown extends React.Component {
           }
         });
       }
-      if (html_li.length === 0 || this.state.list.length === 0 ) {
+      if (this.props.async === true && this.state.list.length === 0) {
+        html_li.push(
+          <li className="animate-flicker" key="loading">Loading...</li>
+        );
+      } else if (html_li.length === 0 || this.state.list.length === 0 ) {
         html_li.push(
           <li key="no-data">No data</li>
         );
@@ -251,6 +255,13 @@ class Dropdown extends React.Component {
         }
       }
     };
+    this.disableInput = (flag) => {
+      if (flag === true) {
+        let inputClassnames = this.dropdownInput.current.className;
+        inputClassnames += ` disabled`
+        this.dropdownInput.current.setAttribute('class', inputClassnames);
+      }
+    };
     this.placeholder = 'Enter your text';
     if (props) {
       if (props.placeholder) {
@@ -261,6 +272,12 @@ class Dropdown extends React.Component {
   componentDidMount() {
     this.dropdownInput.current.style.width = `${this.defaultWidth().defaultWidth}px`;
     document.addEventListener('mousedown', this.handleClickOutside);
+    if (this.props.disabled === true) {
+      this.disableInput(true);
+    }
+    if (this.props.autofocus === true) {
+      this.dropdownInput.current.focus();
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
@@ -288,6 +305,7 @@ class Dropdown extends React.Component {
               onKeyDown={(e) => this.select(e)}
               onFocus={(e) => this.FocusEvent(e, true)}
               onBlur={(e) => this.onFocusout(e) }
+              disabled={this.props.disabled === true  ? this.props.disabled : false}
             />
             <button className="dp__clear" onClick={(e) => this.changeInput(e, 'clear')}>
               <span className={`${this.state.arrDir} arrow`} >&#8227;&nbsp;</span>
@@ -317,5 +335,9 @@ Dropdown.propTypes = {
   onblur: PropTypes.func,
   focus: PropTypes.func,
   keydown: PropTypes.func,
+  disabled: PropTypes.bool,
+  autofocus: PropTypes.bool,
+  async: PropTypes.bool
+
 };
 export default Dropdown;
