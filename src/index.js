@@ -29,7 +29,7 @@ class Dropdown extends React.Component {
       if (this.validationProps()) {
         e.persist();
         this.setState({ showList: flag }, () => {
-          if (this.props.multiselect) {
+          if (this.props.multiselect === true) {
             const li = document.querySelector('#dp__list ul').childNodes;
             li[this.state.currentFocus].style.backgroundColor = '#f5f5f5';
             li[this.state.currentFocus].setAttribute('data-selected', 'active');
@@ -45,7 +45,7 @@ class Dropdown extends React.Component {
             currentInput: this.state.input,
             event: e
           };
-          if (this.props.multiselect) {
+          if (this.props.multiselect === true) {
             focusData.multiSelect = this.state.multi;
           }
           this.props.focus(focusData);
@@ -63,7 +63,7 @@ class Dropdown extends React.Component {
           if (this.props.callback) {
             callBack.currentInput = this.state.input;
             callBack.event = e;
-            if (this.props.multiselect) {
+            if (this.props.multiselect === true) {
               callBack.multiSelect = this.state.multi;
             }
             this.props.callback(callBack);
@@ -97,10 +97,12 @@ class Dropdown extends React.Component {
     };
     this.setInput = (e, input) => {
       e.persist();
-      if (this.props.multiselect) {
+      if (this.props.multiselect === true) {
         if (e.type === 'click') {
-          document.querySelector('#dp__list ul li[data-selected="active"]').style.backgroundColor = '';
-          document.querySelector('#dp__list ul li[data-selected="active"]').removeAttribute('data-selected');
+          if (document.querySelector('#dp__list ul li[data-selected="active"]')) {
+            document.querySelector('#dp__list ul li[data-selected="active"]').style.backgroundColor = '';
+            document.querySelector('#dp__list ul li[data-selected="active"]').removeAttribute('data-selected');
+          }
           e.target.parentNode.setAttribute('data-selected', 'active');
           e.target.parentNode.style.backgroundColor = "#f5f5f5";
           const data = e.target.parentNode.getAttribute('data-value');
@@ -247,13 +249,17 @@ class Dropdown extends React.Component {
           } else {
             this.setInput(e);
           }
+        } else if (e.which === 8) {
+          if (this.props.multiselect === true && this.state.multi.length > 0) {
+            this.removeFromMulti(this.state.multi[this.state.multi.length -1]);
+          }
         }
         if (this.props.keydown) {
           const focusData = {
             currentInput: this.state.input,
             event: e
           };
-          if (this.props.multiselect) {
+          if (this.props.multiselect === true) {
             focusData.multiSelect = this.state.multi;
           }
           this.props.keydown(focusData);
