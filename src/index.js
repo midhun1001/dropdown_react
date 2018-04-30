@@ -6,7 +6,7 @@ class Dropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: this.props.list,
+      list: this.props.list.sort(),
       input: '',
       showList: false,
       currentFocus: 0,
@@ -250,7 +250,7 @@ class Dropdown extends React.Component {
             this.setInput(e);
           }
         } else if (e.which === 8) {
-          if (this.props.multiselect === true && this.state.multi.length > 0) {
+          if (this.state.input === '' && this.props.multiselect === true && this.state.multi.length > 0) {
             this.removeFromMulti(this.state.multi[this.state.multi.length -1]);
           }
         }
@@ -279,7 +279,7 @@ class Dropdown extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
-      this.setState({ list: nextProps.list });
+      this.setState({ list: nextProps.list.sort() });
     }
   }
   render() {

@@ -93,6 +93,9 @@
 .dp__list ul li {
   padding: 5px 10px;
   border-bottom: 1px solid #e7e7e7;
+  white-space: nowrap;
+  overflow: none;
+  text-overflow: ellipsis;
 }
 .dp__list ul li a {
   display: block;
