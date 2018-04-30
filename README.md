@@ -88,6 +88,31 @@ import Dropdown "customizable-dropdown-react";
               </td>
             </tr>
             <tr>
+              <td>autofocus</td>
+              <td>
+                <h5>Boolean</h5>
+                <p>Will focus the dropdown input on mounting.</p>
+                <p>Default value: false</p>
+              </td>
+            </tr>
+            <tr>
+              <td>disabled</td>
+              <td>
+                <h5>Boolean</h5>
+                <p>Will disable the input.</p>
+                <p>Default value: false</p>
+              </td>
+            </tr>
+            <tr>
+              <td>async</td>
+              <td>
+                <h5>Boolean</h5>
+                <p>Will enable asynchronous loading of lists.</p>
+                <p>Default value: false</p>
+                <p><strong>Note:</strong> Asynchronous loading will work by default also, but some functionality wouldn't work.</p>
+              </td>
+            </tr>
+            <tr>
               <td>placeholder</td>
               <td>
                 <h5>string</h5>
@@ -116,7 +141,7 @@ import Dropdown "customizable-dropdown-react";
             </tr>
           </tbody>
         </table>
-<p>The response for all the functional props i.e focus, keydown, callback is: </p> 
+<p>The response for all the functional props i.e focus, keydown, callback is: </p>
   <pre>
     {
       currentInput: '', // current input of the component
