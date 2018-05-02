@@ -13,7 +13,6 @@ class Dropdown extends React.Component {
       multi: [],
       arrDir: '',
     };
-    this.dropdownInput = React.createRef();
     this.validationProps = () => {
       return (
         typeof this.state.list === 'object'
@@ -64,7 +63,7 @@ class Dropdown extends React.Component {
       const callBack = {};
       if (flag === 'clear') {
         this.setState({ input: '', multi: [], currentFocus: 0 });
-        this.dropdownInput.current.focus();
+        document.getElementById('dp__input').focus();
       } else {
         this.setState({ input: e.target.value, currentFocus: 0 }, () => {
           if (this.props.callback) {
@@ -109,8 +108,8 @@ class Dropdown extends React.Component {
       if (!multi.includes(input)) {
         multi.push(input);
         this.setState({ currentFocus: list.indexOf(input), multi },() => {
-          this.dropdownInput.current.focus();
-          this.dropdownInput.current.style.width = `${this.defaultWidth().multiSelectWidth}px`;
+          document.getElementById('dp__input').focus();
+          document.getElementById('dp__input').style.width = `${this.defaultWidth().multiSelectWidth}px`;
         });
       }
     };
@@ -121,7 +120,7 @@ class Dropdown extends React.Component {
         multi.splice(index, 1);
         this.setState({ multi }, () => {
           document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
-          this.dropdownInput.current.focus();
+          document.getElementById('dp__input').focus();
         });
       }
     };
@@ -257,9 +256,9 @@ class Dropdown extends React.Component {
     };
     this.disableInput = (flag) => {
       if (flag === true) {
-        let inputClassnames = this.dropdownInput.current.className;
+        let inputClassnames = document.getElementById('dp__input').className;
         inputClassnames += ` disabled`
-        this.dropdownInput.current.setAttribute('class', inputClassnames);
+        document.getElementById('dp__input').setAttribute('class', inputClassnames);
       }
     };
     this.placeholder = 'Enter your text';
@@ -270,13 +269,13 @@ class Dropdown extends React.Component {
     }
   }
   componentDidMount() {
-    this.dropdownInput.current.style.width = `${this.defaultWidth().defaultWidth}px`;
+    document.getElementById('dp__input').style.width = `${this.defaultWidth().defaultWidth}px`;
     document.addEventListener('mousedown', this.handleClickOutside);
     if (this.props.disabled === true) {
       this.disableInput(true);
     }
     if (this.props.autofocus === true) {
-      this.dropdownInput.current.focus();
+      document.getElementById('dp__input').focus();
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -297,7 +296,7 @@ class Dropdown extends React.Component {
               </div>
             }
             <input
-              ref={this.dropdownInput}
+              id="dp__input"
               className={`dp__input ${this.props.inputClass ? this.props.inputClass : ''}`}
               value={this.state.input}
               placeholder={this.placeholder}
