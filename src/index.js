@@ -62,7 +62,9 @@ class Dropdown extends React.Component {
       e.persist();
       const callBack = {};
       if (flag === 'clear') {
-        this.setState({ input: '', multi: [], currentFocus: 0 });
+        this.setState({ input: '', multi: [], currentFocus: 0 }, () => {
+          document.getElementById('dp__input').style.width = `${this.defaultWidth().defaultWidth}px`;
+        });
         document.getElementById('dp__input').focus();
       } else {
         this.setState({ input: e.target.value, currentFocus: 0 }, () => {
@@ -118,7 +120,11 @@ class Dropdown extends React.Component {
         const multi = this.state.multi;
         const index = multi.indexOf(val);
         multi.splice(index, 1);
-        this.setState({ multi });
+        this.setState({ multi }, () => {
+          if (this.state.multi.length === 0) {
+            document.getElementById('dp__input').style.width = `${this.defaultWidth().defaultWidth}px`;
+          }
+        });
       }
     };
     this.renderMulti = () => {
