@@ -13,6 +13,7 @@ class Dropdown extends React.Component {
       multi: [],
       arrDir: '',
     };
+    this.dropdownInput = React.createRef();
     this.validationProps = () => {
       return (
         typeof this.state.list === 'object'
@@ -296,7 +297,7 @@ class Dropdown extends React.Component {
               </div>
             }
             <input
-              id="dp__input"
+              ref={this.dropdownInput}
               className={`dp__input ${this.props.inputClass ? this.props.inputClass : ''}`}
               value={this.state.input}
               placeholder={this.placeholder}
