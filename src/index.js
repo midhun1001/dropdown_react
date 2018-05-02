@@ -118,10 +118,7 @@ class Dropdown extends React.Component {
         const multi = this.state.multi;
         const index = multi.indexOf(val);
         multi.splice(index, 1);
-        this.setState({ multi }, () => {
-          document.querySelector(`#dp__list ul li[data-value="${val}"]`).removeAttribute('data-selected');
-          document.getElementById('dp__input').focus();
-        });
+        this.setState({ multi });
       }
     };
     this.renderMulti = () => {
