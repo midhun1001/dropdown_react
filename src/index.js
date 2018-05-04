@@ -195,8 +195,13 @@ class Dropdown extends React.Component {
         });
       }
       if (this.props.async === true && this.state.list.length === 0) {
+        console.log(this.props);
         html_li.push(
-          <li className="animate-flicker" key="loading">Loading...</li>
+          <li className={this.props.loadingClass ? this.props.loadingClass : 'animate-flicker'} key="loading">
+            {
+              this.props.loadingText ? this.props.loadingText : 'Loading...'
+            }
+          </li>
         );
       } else if (html_li.length === 0 || this.state.list.length === 0 ) {
         html_li.push(
@@ -339,7 +344,9 @@ Dropdown.propTypes = {
   keydown: PropTypes.func,
   disabled: PropTypes.bool,
   autofocus: PropTypes.bool,
-  async: PropTypes.bool
+  async: PropTypes.bool,
+  loadingClass: PropTypes.string,
+  loadingText: PropTypes.string
 
 };
 export default Dropdown;

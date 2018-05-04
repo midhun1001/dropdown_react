@@ -139,6 +139,20 @@ import Dropdown "customizable-dropdown-react";
                 <p>Customize the style of the dropdown list of the component by passing custom class</p>
               </td>
             </tr>
+            <tr>
+              <td>loadingText</td>
+              <td>
+                <h5>string</h5>
+                <p>Provide custom loading text for async loading</p>
+              </td>
+            </tr>
+            <tr>
+              <td>loadingClass</td>
+              <td>
+                <h5>string</h5>
+                <p>Customize the style of the loading component by passing custom class.</p>
+              </td>
+            </tr>
           </tbody>
         </table>
 <p>The response for all the functional props i.e focus, keydown, callback is: </p>
