@@ -41,7 +41,7 @@
 .dp {
   display: inline-block;
   float: left;
-  height: inherit;
+  height: 30px;
   width: 100%;
   background: white;
   position: relative;
@@ -50,8 +50,8 @@
   height: 100%;
   float: left;
   display: inline-block;
-  width: auto;
-  padding: 3px 10px;
+  width: 100%;
+  padding: 5px;
   margin: 0;
   border-width: 0;
   outline: none;
@@ -70,7 +70,7 @@
 .multiselect__item {
   height: 100%;
   display: inline-block;
-  padding: 3px 5px;
+  margin-right: 5px;
 }
 .multiselect__item span {
   height: 100%;
@@ -133,11 +133,13 @@
   white-space: nowrap;
   overflow: none;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .dp__list ul li a {
   display: block;
   width: 100%;
   cursor: pointer;
+  text-align: left;
 }
 .dp__list ul li:last-child {
   border: 0;
