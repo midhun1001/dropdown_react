@@ -13,6 +13,8 @@ import Dropdown "customizable-dropdown-react";
   callback={this.callback_func}
 />
 ```
+<h4>Demo: https://codesandbox.io/s/n3pj1kom80</h4>
+
 <table>
           <thead>
             <tr>
