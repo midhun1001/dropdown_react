@@ -36,6 +36,7 @@ class Dropdown extends React.Component {
         }
         this.props.onblur(data);
       }
+      console.log(this.state.input);
     };
     this.FocusEvent = (e, flag) => {
       if (this.validationProps()) {
@@ -107,12 +108,16 @@ class Dropdown extends React.Component {
       e.persist();
       const list = this.state.list;
       const multi = this.state.multi;
-      if (!multi.includes(input)) {
-        multi.push(input);
-        this.setState({ currentFocus: list.indexOf(input), multi },() => {
-          document.getElementById('dp__input').focus();
-          document.getElementById('dp__input').style.width = `${this.defaultWidth().multiSelectWidth}px`;
-        });
+      if (this.props.multiselect) {
+        if (!multi.includes(input)) {
+          multi.push(input);
+          this.setState({ currentFocus: list.indexOf(input), multi },() => {
+            document.getElementById('dp__input').focus();
+            document.getElementById('dp__input').style.width = `${this.defaultWidth().multiSelectWidth}px`;
+          });
+        }
+      } else {
+        this.setState({ input });
       }
     };
     this.removeFromMulti = (val) => {
@@ -195,7 +200,6 @@ class Dropdown extends React.Component {
         });
       }
       if (this.props.async === true && this.state.list.length === 0) {
-        console.log(this.props);
         html_li.push(
           <li className={this.props.loadingClass ? this.props.loadingClass : 'animate-flicker'} key="loading">
             {
