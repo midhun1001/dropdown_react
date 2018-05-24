@@ -36,7 +36,6 @@ class Dropdown extends React.Component {
         }
         this.props.onblur(data);
       }
-      console.log(this.state.input);
     };
     this.FocusEvent = (e, flag) => {
       if (this.validationProps()) {
